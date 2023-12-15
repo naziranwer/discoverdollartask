@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react'
+import Header from './components/Header'
+import Navabar from './components/Navabar'
+import ProductCard from './components/Card';
+import Footer from './components/Footer';
+import Hero from './components/Hero';
+import { useDispatch } from 'react-redux';
+import { addSelectedProducts } from './redux/action';
 
-function App() {
+const App = () => {
+  const [data,setData]=useState([]);
+
+  const dispatch=useDispatch();
+
+  useEffect(()=>{
+    fetch('https://dummyjson.com/products')
+    .then((response) => response.json())
+    .then((data) => {
+      // Work with the JSON data here
+      console.log(data);
+      dispatch(addSelectedProducts(data.products));
+
+      setData(data);
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+    });
+  
+  },[dispatch]);
+  console.log("array",data.products);
+
+  // { data?.products && dispatch(addSelectedProducts(data?.products))};
+  console.log("data sent to redux");
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+     <Navabar/>
+     <Header/>
+     {/* <Hero/> */}
+     <ProductCard />
+     <Footer/>
+    </>
+    
+  )
 }
 
-export default App;
+export default App
